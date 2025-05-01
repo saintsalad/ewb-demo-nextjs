@@ -15,7 +15,7 @@ export default function Home() {
             Monitoring System
           </h2>
         </div>
-        
+
         {/* Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 w-full max-w-md justify-center">
           <Link href="/inquiry">
