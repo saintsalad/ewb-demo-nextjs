@@ -1,0 +1,280 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model EFMigrationsHistory {
+  MigrationId    String @id(map: "PK___EFMigrationsHistory") @db.NVarChar(150)
+  ProductVersion String @db.NVarChar(32)
+
+  @@map("__EFMigrationsHistory")
+}
+
+model AccessLog {
+  Id              Int      @id(map: "PK_AccessLog") @default(autoincrement())
+  CreatedDate     DateTime
+  UpdatedDate     DateTime
+  RequestUrl      String?  @db.NVarChar(Max)
+  RequestMethod   String?  @db.NVarChar(Max)
+  RequestHeaders  String?  @db.NVarChar(Max)
+  RequestBody     String?  @db.NVarChar(Max)
+  ResponseHeaders String?  @db.NVarChar(Max)
+  ResponseBody    String?  @db.NVarChar(Max)
+  ResponseCode    String?  @db.NVarChar(Max)
+  RequestIp       String?  @db.NVarChar(Max)
+  RequestQuery    String?  @db.NVarChar(Max)
+}
+
+model AppSurvey {
+  Id               Int      @id(map: "PK_AppSurvey") @default(autoincrement())
+  Rating           Int
+  PhoneNumber      String?  @db.NVarChar(Max)
+  AccomplishedDate DateTime
+}
+
+model AspNetRoleClaims {
+  Id          Int         @id(map: "PK_AspNetRoleClaims") @default(autoincrement())
+  RoleId      String      @db.NVarChar(450)
+  ClaimType   String?     @db.NVarChar(Max)
+  ClaimValue  String?     @db.NVarChar(Max)
+  AspNetRoles AspNetRoles @relation(fields: [RoleId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetRoleClaims_AspNetRoles_RoleId")
+
+  @@index([RoleId], map: "IX_AspNetRoleClaims_RoleId")
+}
+
+model AspNetRoles {
+  Id               String             @id(map: "PK_AspNetRoles") @db.NVarChar(450)
+  Name             String?            @db.NVarChar(256)
+  NormalizedName   String?            @db.NVarChar(256)
+  ConcurrencyStamp String?            @db.NVarChar(Max)
+  AspNetRoleClaims AspNetRoleClaims[]
+  AspNetUserRoles  AspNetUserRoles[]
+}
+
+model AspNetUserClaims {
+  Id          Int         @id(map: "PK_AspNetUserClaims") @default(autoincrement())
+  UserId      String      @db.NVarChar(450)
+  ClaimType   String?     @db.NVarChar(Max)
+  ClaimValue  String?     @db.NVarChar(Max)
+  AspNetUsers AspNetUsers @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserClaims_AspNetUsers_UserId")
+
+  @@index([UserId], map: "IX_AspNetUserClaims_UserId")
+}
+
+model AspNetUserLogins {
+  LoginProvider       String      @db.NVarChar(450)
+  ProviderKey         String      @db.NVarChar(450)
+  ProviderDisplayName String?     @db.NVarChar(Max)
+  UserId              String      @db.NVarChar(450)
+  AspNetUsers         AspNetUsers @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserLogins_AspNetUsers_UserId")
+
+  @@id([LoginProvider, ProviderKey], map: "PK_AspNetUserLogins")
+  @@index([UserId], map: "IX_AspNetUserLogins_UserId")
+}
+
+model AspNetUserRoles {
+  UserId      String      @db.NVarChar(450)
+  RoleId      String      @db.NVarChar(450)
+  AspNetRoles AspNetRoles @relation(fields: [RoleId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserRoles_AspNetRoles_RoleId")
+  AspNetUsers AspNetUsers @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserRoles_AspNetUsers_UserId")
+
+  @@id([UserId, RoleId], map: "PK_AspNetUserRoles")
+  @@index([RoleId], map: "IX_AspNetUserRoles_RoleId")
+}
+
+model AspNetUsers {
+  Id                   String             @id(map: "PK_AspNetUsers") @db.NVarChar(450)
+  UserName             String?            @db.NVarChar(256)
+  NormalizedUserName   String?            @db.NVarChar(256)
+  Email                String?            @db.NVarChar(256)
+  NormalizedEmail      String?            @db.NVarChar(256)
+  EmailConfirmed       Boolean
+  PasswordHash         String?            @db.NVarChar(Max)
+  SecurityStamp        String?            @db.NVarChar(Max)
+  ConcurrencyStamp     String?            @db.NVarChar(Max)
+  PhoneNumber          String?            @db.NVarChar(Max)
+  PhoneNumberConfirmed Boolean
+  TwoFactorEnabled     Boolean
+  LockoutEnd           DateTime?          @db.DateTimeOffset
+  LockoutEnabled       Boolean
+  AccessFailedCount    Int
+  PasswordValidUntil   DateTime
+  DeviceId             String?            @db.NVarChar(Max)
+  FcmToken             String?            @db.NVarChar(Max)
+  FullName             String?            @db.NVarChar(Max)
+  AspNetUserClaims     AspNetUserClaims[]
+  AspNetUserLogins     AspNetUserLogins[]
+  AspNetUserRoles      AspNetUserRoles[]
+  AspNetUserTokens     AspNetUserTokens[]
+
+  @@index([NormalizedEmail], map: "EmailIndex")
+}
+
+model AspNetUserTokens {
+  UserId        String      @db.NVarChar(450)
+  LoginProvider String      @db.NVarChar(450)
+  Name          String      @db.NVarChar(450)
+  Value         String?     @db.NVarChar(Max)
+  AspNetUsers   AspNetUsers @relation(fields: [UserId], references: [Id], onDelete: Cascade, onUpdate: NoAction, map: "FK_AspNetUserTokens_AspNetUsers_UserId")
+
+  @@id([UserId, LoginProvider, Name], map: "PK_AspNetUserTokens")
+}
+
+model CardReplacementRequests {
+  RequestID     String   @id(map: "PK_CardReplacementRequests") @db.NVarChar(450)
+  CreatedDate   DateTime
+  UpdatedDate   DateTime
+  PhoneNumber   String?  @db.NVarChar(Max)
+  OldFourDigits String?  @db.NVarChar(Max)
+  NewFourDigits String?  @db.NVarChar(Max)
+  IsCompleted   Boolean
+  DeviceId      String?  @db.NVarChar(Max)
+}
+
+model DetractorsFeedback {
+  Id               Int      @id(map: "PK_DetractorsFeedback") @default(autoincrement())
+  Rating           Int
+  PhoneNumber      String?  @db.NVarChar(Max)
+  Feedback         String?  @db.NVarChar(Max)
+  AccomplishedDate DateTime
+}
+
+model DeviceAccessLog {
+  Id             Int      @id(map: "PK_DeviceAccessLog") @default(autoincrement())
+  AccessDateTime DateTime
+  DeviceId       String?  @db.NVarChar(Max)
+  MobileNumber   String?  @db.NVarChar(Max)
+  FullName       String?  @db.NVarChar(Max)
+}
+
+model DeviceCodes {
+  UserCode     String   @id(map: "PK_DeviceCodes") @db.NVarChar(200)
+  DeviceCode   String   @unique(map: "IX_DeviceCodes_DeviceCode") @db.NVarChar(200)
+  SubjectId    String?  @db.NVarChar(200)
+  ClientId     String   @db.NVarChar(200)
+  CreationTime DateTime
+  Expiration   DateTime
+  Data         String   @db.NVarChar(Max)
+
+  @@index([Expiration], map: "IX_DeviceCodes_Expiration")
+}
+
+model EwPayActivatedCards {
+  Id            Int      @id(map: "PK_EwPayActivatedCards") @default(autoincrement())
+  UCRN          String?  @db.NVarChar(Max)
+  DateActivated DateTime
+}
+
+model EwPayIneligibleCards {
+  Id           Int      @id(map: "PK_EwPayIneligibleCards") @default(autoincrement())
+  UCRN         String?  @db.NVarChar(Max)
+  IsReported   Boolean
+  IsActivated  Boolean
+  DateReported DateTime
+}
+
+model InvalidDeviceAccess {
+  Id             Int      @id(map: "PK_InvalidDeviceAccess") @default(autoincrement())
+  AccessDateTime DateTime
+  DeviceId       String?  @db.NVarChar(Max)
+  MobileNumber   String?  @db.NVarChar(Max)
+  Reason         String?  @db.NVarChar(Max)
+}
+
+model MastercardProvisionedTokens {
+  TokenUniqueReferenceId  String  @db.NVarChar(450)
+  PhoneNumber             String  @db.NVarChar(450)
+  DeviceId                String? @db.NVarChar(Max)
+  PaymentAccountReference String? @db.NVarChar(Max)
+
+  @@id([TokenUniqueReferenceId, PhoneNumber], map: "PK_MastercardProvisionedTokens")
+  @@index([TokenUniqueReferenceId], map: "IX_MastercardProvisionedTokens_TokenUniqueReferenceId")
+}
+
+model PersistedGrants {
+  Key          String    @id(map: "PK_PersistedGrants") @db.NVarChar(200)
+  Type         String    @db.NVarChar(50)
+  SubjectId    String?   @db.NVarChar(200)
+  ClientId     String    @db.NVarChar(200)
+  CreationTime DateTime
+  Expiration   DateTime?
+  Data         String    @db.NVarChar(Max)
+
+  @@index([Expiration], map: "IX_PersistedGrants_Expiration")
+  @@index([SubjectId, ClientId, Type], map: "IX_PersistedGrants_SubjectId_ClientId_Type")
+}
+
+model ProvisionedTokenIds {
+  Id                 Int     @id(map: "PK_ProvisionedTokenIds") @default(autoincrement())
+  ProvisionedTokenId String? @db.NVarChar(Max)
+  PanEnrollmentId    String? @db.NVarChar(Max)
+  TokenReferenceId   String? @db.NVarChar(Max)
+}
+
+model RegisterLogEntry {
+  Id                   Int      @id(map: "PK_RegisterLogEntry") @default(autoincrement())
+  DeviceId             String?  @db.NVarChar(Max)
+  MobileNumber         String?  @db.NVarChar(Max)
+  RegistrationDateTime DateTime
+}
+
+model sysdiagrams {
+  name         String @db.NVarChar(128)
+  principal_id Int
+  diagram_id   Int    @id(map: "PK__sysdiagr__C2B05B61FF6DD705") @default(autoincrement())
+  version      Int?
+  definition   Bytes?
+
+  @@unique([principal_id, name], map: "UK_principal_name")
+}
+
+model TapToPayTransactionLog {
+  Id              Int      @id(map: "PK_TapToPayTransactionLog") @default(autoincrement())
+  DeviceId        String?  @db.NVarChar(Max)
+  PhoneNumber     String?  @db.NVarChar(Max)
+  TransactionDate DateTime
+}
+
+model TokenStatuses {
+  ID                    Int                     @id(map: "PK_TokenStatuses") @default(autoincrement())
+  Name                  String?                 @db.NVarChar(Max)
+  CardProviderName      String?                 @db.NVarChar(Max)
+  IsSuspended           Boolean
+  IsDeleted             Boolean
+  IsActive              Boolean
+  IsInactive            Boolean
+  VisaProvisionedTokens VisaProvisionedTokens[]
+}
+
+model VisaProvisionedTokens {
+  ProvisionedTokenId String         @db.NVarChar(450)
+  PhoneNumber        String         @db.NVarChar(450)
+  DeviceId           String?        @db.NVarChar(Max)
+  StatusId           Int?
+  PanEnrollmentId    String?        @db.NVarChar(Max)
+  TokenStatuses      TokenStatuses? @relation(fields: [StatusId], references: [ID], onDelete: NoAction, onUpdate: NoAction, map: "FK_VisaProvisionedTokens_TokenStatuses_StatusId")
+
+  @@id([ProvisionedTokenId, PhoneNumber], map: "PK_VisaProvisionedTokens")
+  @@index([ProvisionedTokenId], map: "IX_VisaProvisionedTokens_ProvisionedTokenId")
+  @@index([StatusId], map: "IX_VisaProvisionedTokens_StatusId")
+}
+
+model VisaRequests {
+  Id              String   @id(map: "PK_VisaRequests") @db.UniqueIdentifier
+  CreatedDate     DateTime
+  UpdatedDate     DateTime
+  RequestUrl      String?  @db.NVarChar(Max)
+  RequestMethod   String?  @db.NVarChar(Max)
+  RequestHeaders  String?  @db.NVarChar(Max)
+  RequestBody     String?  @db.NVarChar(Max)
+  ResponseHeaders String?  @db.NVarChar(Max)
+  ResponseBody    String?  @db.NVarChar(Max)
+  ResponseCode    String?  @db.NVarChar(Max)
+  RequestIp       String?  @db.NVarChar(Max)
+  RequestQuery    String?  @db.NVarChar(Max)
+}

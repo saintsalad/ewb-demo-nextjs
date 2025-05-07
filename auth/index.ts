@@ -11,4 +11,5 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             // issuer: `https://login.microsoftonline.com/${process.env.AUTH_MICROSOFT_ENTRA_TENANT_ID}/v2.0`,
         })
     ],
+    
 })

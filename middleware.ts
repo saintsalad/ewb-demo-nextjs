@@ -22,7 +22,7 @@ export default auth((req) => {
     }
 
     if (isProtectedRoute && !isLoggedIn) {
-        return NextResponse.redirect(new URL("/login", nextUrl))
+       // return NextResponse.redirect(new URL("/login", nextUrl))
     }
 
     return NextResponse.next();
